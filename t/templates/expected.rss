@@ -1,0 +1,34 @@
+Content-Type: text/xml; charset=ISO-8859-1
+
+<?xml version="1.0"?>
+<!-- name="generator" content="blosxom/2.1.0" -->
+<!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN" "http://my.netscape.com/publish/formats/rss-0.91.dtd">
+
+<rss version="0.91">
+  <channel>
+    <title>My Weblog   </title>
+    <link>http://localhost/./blosxom.cgi</link>
+    <description>Yet another Blosxom weblog.</description>
+    <language>en</language>
+
+  <item>
+    <title>Lorem ipsum</title>
+    <link>http://localhost/./blosxom.cgi/2006/07/19#1</link>
+    <description>Lorem ipsum dolor sit amet ipso facto.Lorem ipsum dolor sit amet ipso
+facto.Lorem ipsum dolor sit amet ipso facto. Lorem ipsum dolor sit
+amet ipso facto.Lorem ipsum dolor sit amet ipso facto. 
+
+facto.Lorem ipsum dolor sit amet ipso facto.Lorem ipsum dolor sit amet
+ipso facto.Lorem ipsum dolor sit amet ipso facto. Lorem ipsum dolor
+sit amet ipso facto.Lorem ipsum dolor sit amet ipso facto. 
+
+Lorem ipso hoccer foer tyr wuz de ras cora dola tymon ipso hoc cer fuz
+de ramas cora dola tymon ipso hoccer. Lorem ipso foer tyr wuz de ramas
+cora dola tym ipso hor.Lorem ipso foer tyr wuz de ramas cora dola tym
+ipso hor tyr wuz de ramas cora dola tymon ipso foer tyr wuz de ramas
+cora dola tymo. Lorem ipso hoccer foer tyr wuz de ras cora dola tymon
+ipso hoc cer fuz de ramas cora dola tymon ipso hoccer. Lorem ipso foer
+tyr wuz de ramas cora dola tym ipso hor.</description>
+  </item>
+  </channel>
+</rss>

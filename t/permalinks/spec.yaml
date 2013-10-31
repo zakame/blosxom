@@ -1,0 +1,18 @@
+tests:
+  - 
+    - ""
+    - expected.html
+  -
+    - path=/foo
+    - expected.html
+# GC: the following test fails because $path_info = test#bar, but via CGI the 
+#   #bar is stripped by the CGI module. So I'm not sure what this is testing.
+# -
+#   - path=/foo#bar
+#   - expected.html
+  -
+    - path=/foo/bar.html
+    - expected.bar
+#  -
+#    - path=/2006/07/25/bar.html
+#    - expected.bar

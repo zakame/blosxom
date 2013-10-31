@@ -1,0 +1,81 @@
+Running Tests
+=============
+
+  perl ./Setup
+  prove *.t
+
+
+
+Test Layout
+===========
+
+To add a new test, you want to add two things - a test script (which
+is typically just a symlink to the main 'driver' script), and a test
+directory. If you just want a symlink test script, then add your
+test script name to 'Tests', and rerun Setup. To add a new test 
+directory, you're probably best just to copy one of the existing 
+ones - 'templates' is a good choice:
+
+  cp -rp templates newtest
+
+Test directory layout is as follows, using 'templates' as an example:
+
+  templates
+  |-- config
+  |   `-- blosxom.conf
+  |-- data
+  |   |-- 1.txt
+  |   |-- 1.txt.200607192254
+  |   |-- content_type.html
+  |   |-- date.html
+  |   |-- foot.html
+  |   |-- head.html
+  |   `-- story.html
+  |-- expected.html
+  `-- spec.yaml
+
+The 'config' directory contains the config files for this blosxom
+instance, which is minimally a 'blosxom.conf' file with the $data_dir
+variable pointing to the 'data' directory. Customising this is 
+optional.
+
+The 'data directory' is the set of stories or posts you want to use
+for your test, and any flavour files you want. Stories may optionally be 
+suffixed with a numeric timestamp (format YYYYMMDDHHMI) like the 
+'1.txt.200607192254' entry above, which is used to set the modify time
+of the story explicitly (since CVS does not store mtimes). Providing 
+flavour files is recommended so that your tests don't break if the 
+default flavours change. 
+ 
+At the top level of the test directory are a set of one or more
+expected output files, and the spec.yaml files which controls the set
+of tests that are run. For templates, the spec.yaml looks like this:
+
+  tests:
+    - 
+      - ""
+      - expected.html
+
+This lists the set of tests to be run (in this case just a single test).
+Each test requires a list of two arguments - the arguments to path to
+blosxom.cgi (in this case none, an empty string), and a file containing
+the expected output. So this test will execute blosxom.cgi with no 
+arguments, and compare the output produced against that contained in
+the 'expected.html' file.
+
+A longer spec.yaml example is:
+
+  tests:
+    - 
+      - ""
+      - expected.html
+    -
+      - path=/foo
+      - expected.html
+    -
+      - path=/foo/bar.html
+      - expected.bar
+
+This defines three tests, one with no arguments, one with a path of 
+/foo, and a third with a path of /foo/bar.html.
+

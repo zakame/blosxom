@@ -1,0 +1,7 @@
+01_templates.t
+02_smoketest.t
+03_permalinks.t
+03_interpolate.t
+04_plugin_dir.t
+04_plugin_list.t
+08_static_basic.t

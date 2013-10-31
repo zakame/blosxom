@@ -1,0 +1,62 @@
+v2.1.2
+    * Fix XSS in $flavour (CVE-2008-2236). Thanks to Yoshinori Ohta of
+      Business Architects Inc. for making us aware of this issue.
+
+v2.1.1
+    * The "never trust a dot zero release" bugfix release for 2.1.0.
+    * Added CVS Id keyword to file header.
+    * Declaring $encode_xml_entities as a config option by moving it into
+      the config section -- no functionality change.
+    * Changing isPermalink back to "false" for the default RSS story
+      template because it won't be a working link in many situations.
+      This won't change the GUID, but don't let it be used as 
+      anymore. That's what the <link> tag is for anyway. Thanks to Lilo
+      von Hanffstengel for pointing this out.
+    * Rewrote the (at least with Apache 2.2's environment) no more working
+      manual base URL detection code. Made it simpler, easier to
+      understand and let it only apply, if the base URL was not set
+      manually. The concept since 2.0.2 was: Always ask for the whole URI
+      and then remove the PATH_INFO in some cases again. This caused some
+      havoc. New concept is: Strip PATH_INFO from base URL if CGI.pm
+      didn't manage to do it. In those rare cases where neither CGI.pm nor
+      Blosxom manages to correctly determine the base URL, you can easily
+      set $url in the config file to the correct value and no base URL
+      magic happens anymore (except the removing of a trailing slash if
+      present -- as before). Closes: #2032685
+    * Added a lot of comments explaining the fixed problems and the
+      remaining seldom cases where manual configuration is necessary.
+
+v2.1.0
+    * unescape url returned from CGI.pm to match PATH_INFO escaping
+    * redo path_info handling with much stricter date tests
+    * added support for multiple plugin directories using $plugin_path
+        * changed plugin loading to use @INC instead of hardcoded 
+          $plugin_dir
+        * added support for external config file via BLOSXOM_CONFIG_DIR 
+          and/or BLOSXOM_CONFIG_FILE environment variables
+        * added support for $plugin_list plugin config file
+    * fixed several RSS and XHTML escaping issues (Closes: #1717980)
+    * made the default templates conforming to HTML 4.01
+      (Closes: #1609595)
+    * added a testsuite for blosxom
+    * added an encoding setting, defaulting to UTF-8
+    * added support for configuration files and therefore blosxom farms
+      (based on the Debian config file patch)
+    * allowed the content of the content type template to be used as
+      variable in other templates, e.g. for usage with <meta> tags.
+    * many small improvements
+    * some code refactoring (including a .perltidyrc)
+
+v2.0.2
+    * fixed path_info to have correct extension in static mode (bug
+      1368882)
+    * fixed filtering bug in static mode (bug 1356997)
+    * changed DATA section template parsing to allow newlines for
+      greater readability, and to allow empty templates.
+    * work-around for bug in CGI::url() when using SSI
+
+v2.0.1
+    * Fixed XML escaping of RSS feeds
+    * Ignore editor backup files in the plugin directory (i.e.
+      "myplugin~")
+    * Set path_info variables correctly for all static pages.

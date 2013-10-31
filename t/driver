@@ -1,0 +1,143 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use Test::More qw( no_plan );
+
+use Cwd;
+use YAML;
+use IO::File;
+use File::Find;
+use File::Copy;
+#use File::Touch;
+use File::Basename;
+use Test::Differences;
+
+my $test = basename($0);
+$test =~ s/^\d+_?//;
+$test =~ s/\.t$//;
+
+my $testdir = $test;
+$testdir = "t/$testdir" if -d "t/$testdir";
+$testdir = cwd . "/$testdir";
+die "cannot find root '$testdir'" unless -d $testdir;
+
+my $blosxom_config_dir = "$testdir/config";
+die "cannot find blosxom config dir '$blosxom_config_dir'" unless -d $blosxom_config_dir;
+$ENV{BLOSXOM_CONFIG_DIR} = $blosxom_config_dir;
+$ENV{TZ} = 'UTC';
+
+my $blosxom_cgi = $ENV{BLOSXOM_CGI};
+unless ($blosxom_cgi && -f $blosxom_cgi) {
+  if (-f "$testdir/../../blosxom.cgi") {
+    $blosxom_cgi = "$testdir/../../blosxom.cgi";
+    warn "ignoring BLOSXOM_CGI setting '$ENV{BLOSXOM_CGI}' - using '$blosxom_cgi' instead"
+      if $ENV{BLOSXOM_CGI};
+  }
+  elsif ($blosxom_cgi) {
+    die "cannot find blosxom.cgi '$blosxom_cgi' - check your BLOSXOM_CGI environment variable";
+  }
+  else {
+    die "cannot find blosxom.cgi - please set the BLOSXOM_CGI environment variable";
+  }
+}
+die "blosxom.cgi '$blosxom_cgi' is not executable" unless -x $blosxom_cgi;
+
+my $spec = YAML::LoadFile ("$testdir/spec.yaml") 
+  or die("$test - could not load spec");
+
+touch_files("$testdir/data");
+
+# Eval blosxom.conf
+my ($static_dir, $static_password, @static_flavours);
+if (my $fh = IO::File->new("$blosxom_config_dir/blosxom.conf", 'r')) {
+  no strict;
+  local $/ = undef;
+  eval <$fh>;
+}
+
+# Static mode
+if ($static_password) {
+  eval {
+    require File::DirCompare;
+    require File::Remove;
+  };
+  SKIP: {
+    skip "Static tests require additional modules: $@", 1 if $@;
+    my $expected = $spec->{expected};
+    skip "Static tests require 'expected' directory", 1 unless $expected;
+    $expected = "$blosxom_config_dir/../$expected" unless $expected =~ m!^/!;
+    skip "Static tests 'expected' directory is missing", 1 unless -d $expected;
+    skip "Static tests 'static_dir' directory is missing", 1 unless -d $static_dir;
+
+    File::Remove::remove(\1, "$static_dir/*");
+
+    my $errors = qx($blosxom_cgi -quiet=1 -password=$static_password);
+    is($errors, '', 'no errors reported from static run');
+    File::DirCompare->compare($static_dir, "$blosxom_config_dir/../" . $spec->{expected}, sub {
+      my ($a, $b) = @_;
+      my ($a_short, $b_short) = ($a, $b);
+      $a_short =~ s!^.*\.\./!! if $a_short;
+      $b_short =~ s!^.*\.\./!! if $b_short;
+      return if $b =~ m! /CVS$ !x;
+      if (! $b) {
+        fail("$a_short has no corresponding file");
+      } elsif (! $a) {
+        fail("$b_short has no corresponding file");
+      } else {
+        my ($got, $expected) = ('', '');
+        my $fh = IO::File->new($a, 'r') 
+          or die "cannot open static output file '$a': $!";
+        {
+          local $/ = undef;
+          $got = <$fh>;
+          $fh->close;
+        }
+        $fh = IO::File->new($b, 'r') 
+          or die "cannot open static output file '$b': $!";
+        {
+          local $/ = undef;
+          $expected = <$fh>;
+          $fh->close;
+        }
+        eq_or_diff($got, $expected, "file $a_short and $b_short match", { style => 'Unified' });
+      }
+    }, { ignore_cmp => 1 });
+
+    # Cleanup static output
+    File::Remove::remove(\1, "$static_dir/*") unless $ENV{BLOSXOM_STATIC_NO_CLEANUP};
+  }
+}
+
+# Dynamic mode
+else {
+  my %expected = ();
+  for (@{$spec->{tests}}) {
+    my ($args, $output) = @$_;
+
+    unless ($expected{$output}) {
+      my $fh = IO::File->new("$testdir/$output", 'r')
+        or die "cannot open expected output file '$output': $!";
+      {
+        local $/ = undef;
+        $expected{$output} = <$fh>;
+      }
+      $fh->close;
+    }
+
+    my $got = qx($blosxom_cgi $args);
+
+    eq_or_diff($got, $expected{$output}, "$test - got expected output for args [$args]", { style => 'Unified' });
+  }
+}
+
+sub touch_files {
+  find( sub {
+    if (/^(.*)\.(\d+)$/) {
+      copy($_, $1);
+      `touch -t $2 $1`;
+    }
+  },
+  shift );
+}

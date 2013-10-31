@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+</head>
+<body>
+<pre>
+# Basic scalars
+title: $blog_title
+description: $blosxom::blog_description
+# Namespaced scalars
+Blosxom::Test::string: $Blosxom::Test::string
+# Hash values
+hash{abc}: $hash{abc}
+hash{'X-Factor'}: $hash{'X-Factor'}
+blosxom::hash{def}: $blosxom::hash{def}
+blosxom::hash{"X-Factor"}: $blosxom::hash{"X-Factor"}
+hashref->{abc}: $hashref->{abc}
+blosxom::hashref->{def}: $blosxom::hashref->{def}
+Blosxom::Test::hash{abc}: $Blosxom::Test::hash{abc}
+Blosxom::Test::hash{'X-Factor'}: $Blosxom::Test::hash{'X-Factor'}
+Blosxom::Test::hashref->{def}: $Blosxom::Test::hashref->{def}
+Blosxom::Test::hashref->{"X-Factor"}: $Blosxom::Test::hashref->{"X-Factor"}
+# Bad quoting with hash values
+hash{'X-Factor}: $hash{'X-Factor}
+hash{X-Factor'}: $hash{X-Factor'}
+hash{"X-Factor'}: $hash{"X-Factor'}
+</pre>

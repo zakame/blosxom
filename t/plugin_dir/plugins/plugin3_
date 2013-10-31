@@ -1,0 +1,3 @@
+package plugin3;
+sub start { 1 };
+1;

@@ -1,0 +1,27 @@
+#!/usr/bin/env perl
+#
+# Script to setup test script symlinks, since CVS can't store them
+#
+
+use strict;
+use IO::File;
+
+my $DRIVER = 'driver';
+my $TESTS = 'Tests';
+die "cannot find driver file '$DRIVER'" unless -f $DRIVER;
+die "cannot find tests file '$TESTS'" unless -f $TESTS;
+
+my @tests = ();
+
+my $th = IO::File->new($TESTS, 'r') 
+  or die "cannot open tests file '$TESTS': $!";
+@tests = <$th>;
+close $th;
+
+for my $t (@tests) {
+  chomp $t;
+  unlink $t if -l $t;
+  print "symlink $DRIVER $t\n"; 
+  eval { symlink $DRIVER, $t } or die "symlink $DRIVER, $t failed: $!";
+} 
+

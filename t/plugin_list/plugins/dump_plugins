@@ -1,0 +1,5 @@
+package dump_plugins;
+use vars qw($list);
+sub start { 1 };
+sub head { $list = sprintf "<pre>\n%s\n</pre>\n", join("\n", @blosxom::plugins); }
+1;

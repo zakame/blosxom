@@ -1,0 +1,7 @@
+tests:
+  - 
+    - ""
+    - expected.html
+  - 
+    - "flav=rss"
+    - "expected.rss"

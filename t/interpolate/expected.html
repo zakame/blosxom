@@ -1,0 +1,32 @@
+Content-Type: text/xhtml; charset=UTF-8
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+</head>
+<body>
+<pre>
+# Basic scalars
+title: Interpolation Testing
+description: Terpolation Turpentine
+# Namespaced scalars
+Blosxom::Test::string: this is a test
+# Hash values
+hash{abc}: 123
+hash{'X-Factor'}: 789
+blosxom::hash{def}: 456
+blosxom::hash{"X-Factor"}: 789
+hashref->{abc}: 123
+blosxom::hashref->{def}: 456
+Blosxom::Test::hash{abc}: 123
+Blosxom::Test::hash{'X-Factor'}: 789
+Blosxom::Test::hashref->{def}: 456
+Blosxom::Test::hashref->{"X-Factor"}: 789
+# Bad quoting with hash values
+hash{'X-Factor}: {'X-Factor}
+hash{X-Factor'}: {X-Factor'}
+hash{"X-Factor'}: {"X-Factor'}
+</pre>
+</body>
+</html>
