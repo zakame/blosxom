@@ -150,7 +150,7 @@ unless ($url) {
     $url = url();
 
     # Unescape %XX hex codes (from URI::Escape::uri_unescape)
-    $url =~ s/%([0-9A-Fa-f]{2})/chr(hex($1))/eg;      
+    $url =~ s/%([0-9A-Fa-f]{2})/chr(hex($1))/eg;
 
     # Support being called from inside a SSI document
     $url =~ s/^included:/http:/ if $ENV{SERVER_PROTOCOL} eq 'INCLUDED';
@@ -179,7 +179,7 @@ unless ($url) {
 $url =~ s!/$!!;
 
 # Drop ending any / from dir settings
-$datadir    =~ s!/$!!;
+$datadir =~ s!/$!!;
 $plugin_dir =~ s!/$!!;
 $static_dir =~ s!/$!!;
 
@@ -201,14 +201,14 @@ else {
 # Path Info Magic
 # Take a gander at HTTP's PATH_INFO for optional blog name, archive yr/mo/day
 my @path_info = split m{/}, path_info() || param('path');
-$path_info_full = join '/', @path_info;      # Equivalent to $ENV{PATH_INFO}
+$path_info_full = join '/', @path_info;    # Equivalent to $ENV{PATH_INFO}
 shift @path_info;
 
 # Flavour specified by ?flav={flav} or index.{flav}
 $flavour = '';
-if (! ($flavour = param('flav'))) {
+if ( !( $flavour = param('flav') ) ) {
     if ( $path_info[$#path_info] =~ /(.+)\.(.+)$/ ) {
-       $flavour = $2;
+        $flavour = $2;
         pop @path_info if $1 eq 'index';
     }
 }
@@ -218,45 +218,50 @@ $flavour ||= $default_flavour;
 $flavour = blosxom_html_escape($flavour);
 
 sub blosxom_html_escape {
-  my $string = shift;
-  my %escape = (
-                '<' => '&lt;',
-                '>' => '&gt;',
-                '&' => '&amp;',
-                '"' => '&quot;',
-                "'" => '&apos;'
-                );
-  my $escape_re = join '|' => keys %escape;
-  $string =~ s/($escape_re)/$escape{$1}/g;
-  $string;
+    my $string = shift;
+    my %escape = (
+        '<' => '&lt;',
+        '>' => '&gt;',
+        '&' => '&amp;',
+        '"' => '&quot;',
+        "'" => '&apos;'
+    );
+    my $escape_re = join '|' => keys %escape;
+    $string =~ s/($escape_re)/$escape{$1}/g;
+    $string;
 }
 
 # Global variable to be used in head/foot.{flavour} templates
 $path_info = '';
+
 # Add all @path_info elements to $path_info till we come to one that could be a year
-while ( $path_info[0] && $path_info[0] !~ /^(19|20)\d{2}$/) {
+while ( $path_info[0] && $path_info[0] !~ /^(19|20)\d{2}$/ ) {
     $path_info .= '/' . shift @path_info;
 }
 
 # Pull date elements out of path
-if ($path_info[0] && $path_info[0] =~ /^(19|20)\d{2}$/) {
-  $path_info_yr = shift @path_info;
-  if ($path_info[0] && 
-     ($path_info[0] =~ /^(0\d|1[012])$/ || 
-      exists $month2num{ ucfirst lc $path_info_mo })) {
-    $path_info_mo = shift @path_info;
-    # Map path_info_mo to numeric $path_info_mo_num
-    $path_info_mo_num = $path_info_mo =~ /^\d{2}$/
-      ? $path_info_mo
-      : $month2num{ ucfirst lc $path_info_mo };
-    if ($path_info[0] && $path_info[0] =~ /^[0123]\d$/) {
-      $path_info_da = shift @path_info;
+if ( $path_info[0] && $path_info[0] =~ /^(19|20)\d{2}$/ ) {
+    $path_info_yr = shift @path_info;
+    if ($path_info[0]
+        && ( $path_info[0] =~ /^(0\d|1[012])$/
+            || exists $month2num{ ucfirst lc $path_info_mo } )
+        )
+    {
+        $path_info_mo = shift @path_info;
+
+        # Map path_info_mo to numeric $path_info_mo_num
+        $path_info_mo_num
+            = $path_info_mo =~ /^\d{2}$/
+            ? $path_info_mo
+            : $month2num{ ucfirst lc $path_info_mo };
+        if ( $path_info[0] && $path_info[0] =~ /^[0123]\d$/ ) {
+            $path_info_da = shift @path_info;
+        }
     }
-  }
 }
 
 # Add remaining path elements to $path_info
-$path_info .= '/' . join('/', @path_info);
+$path_info .= '/' . join( '/', @path_info );
 
 # Strip spurious slashes
 $path_info =~ s!(^/*)|(/*$)!!g;
@@ -299,7 +304,7 @@ my @plugin_list = ();
 my %plugin_hash = ();
 
 # If $plugin_list is set, read plugins to use from that file
-if ( $plugin_list ) {
+if ($plugin_list) {
     if ( -r $plugin_list and $fh->open("< $plugin_list") ) {
         @plugin_list = map { chomp $_; $_ } grep { /\S/ && !/^#/ } <$fh>;
         $fh->close;
@@ -311,7 +316,7 @@ if ( $plugin_list ) {
 }
 
 # Otherwise walk @plugin_dirs to get list of plugins to use
-if ( ! @plugin_list && @plugin_dirs ) {
+if ( !@plugin_list && @plugin_dirs ) {
     for my $plugin_dir (@plugin_dirs) {
         next unless -d $plugin_dir;
         if ( opendir PLUGINS, $plugin_dir ) {
@@ -338,10 +343,10 @@ unshift @INC, @plugin_dirs;
 foreach my $plugin (@plugin_list) {
     my ( $plugin_name, $off ) = $plugin =~ /^\d*([\w:]+?)(_?)$/;
     my $plugin_file = $plugin_list ? $plugin_name : $plugin;
-    my $on_off = $off eq '_' ? -1 : 1;
+    my $on_off      = $off eq '_'  ? -1           : 1;
 
     # Allow perl module plugins
-    # The -z test is a hack to allow a zero-length placeholder file in a 
+    # The -z test is a hack to allow a zero-length placeholder file in a
     #   $plugin_path directory to indicate an @INC module should be loaded
     if ( $plugin =~ m/::/ && ( $plugin_list || -z $plugin_hash{$plugin} ) ) {
 
@@ -558,10 +563,13 @@ sub generate {
 
     # Define default interpolation subroutine
     $interpolate = sub {
+
         package blosxom;
         my $template = shift;
+
         # Interpolate scalars, namespaced scalars, and hash/hashref scalars
-        $template =~ s/(\$\w+(?:::\w+)*(?:(?:->)?{(['"]?)[-\w]+\2})?)/"defined $1 ? $1 : ''"/gee;
+        $template
+            =~ s/(\$\w+(?:::\w+)*(?:(?:->)?{(['"]?)[-\w]+\2})?)/"defined $1 ? $1 : ''"/gee;
         return $template;
     };
 
@@ -609,8 +617,7 @@ sub generate {
         # Define a default sort subroutine
         my $sort = sub {
             my ($files_ref) = @_;
-            return
-                sort { $files_ref->{$b} <=> $files_ref->{$a} }
+            return sort { $files_ref->{$b} <=> $files_ref->{$a} }
                 keys %$files_ref;
         };
 
@@ -696,18 +703,19 @@ sub generate {
                 }
             }
 
-            if ( $encode_xml_entities &&
-                 $content_type =~ m{\bxml\b} &&
-                 $content_type !~ m{\bxhtml\b} ) {
+            if (   $encode_xml_entities
+                && $content_type =~ m{\bxml\b}
+                && $content_type !~ m{\bxhtml\b} )
+            {
                 # Escape special characters inside the <link> container
 
                 # The following line should be moved more towards to top for
                 # performance reasons -- Axel Beckert, 2008-07-22
                 my $url_escape_re = qr([^-/a-zA-Z0-9:._]);
 
-                $url   =~ s($url_escape_re)(sprintf('%%%02X', ord($&)))eg;
-                $path  =~ s($url_escape_re)(sprintf('%%%02X', ord($&)))eg;
-                $fn    =~ s($url_escape_re)(sprintf('%%%02X', ord($&)))eg;
+                $url =~ s($url_escape_re)(sprintf('%%%02X', ord($&)))eg;
+                $path =~ s($url_escape_re)(sprintf('%%%02X', ord($&)))eg;
+                $fn =~ s($url_escape_re)(sprintf('%%%02X', ord($&)))eg;
 
                 # Escape <, >, and &, and to produce valid RSS
                 my %escape = (
@@ -719,10 +727,10 @@ sub generate {
                 );
                 my $escape_re = join '|' => keys %escape;
                 $title =~ s/($escape_re)/$escape{$1}/g;
-                $body  =~ s/($escape_re)/$escape{$1}/g;
-                $url   =~ s/($escape_re)/$escape{$1}/g;
-                $path  =~ s/($escape_re)/$escape{$1}/g;
-                $fn    =~ s/($escape_re)/$escape{$1}/g;
+                $body =~ s/($escape_re)/$escape{$1}/g;
+                $url =~ s/($escape_re)/$escape{$1}/g;
+                $path =~ s/($escape_re)/$escape{$1}/g;
+                $fn =~ s/($escape_re)/$escape{$1}/g;
             }
 
             $story = &$interpolate($story);
