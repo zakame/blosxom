@@ -1,3 +1,12 @@
+v4.0.0
+    * Create symlinks to tests in t/.
+    * Update to #!/usr/bin/env perl.
+    * Add a cpanfile to manage dependencies; currently just CGI and a
+      YAML, Test::Differences for the testsuite.
+    * Reformat code with an updated perltidy (and reimport a sane
+      .perltidyrc.)
+    * Add a README.md for this particular spin of Blosxom ;)
+
 v2.1.2
     * Fix XSS in $flavour (CVE-2008-2236). Thanks to Yoshinori Ohta of
       Business Architects Inc. for making us aware of this issue.
