@@ -47,8 +47,8 @@ $show_future_entries = 0;
 
 # --- Plugins (Optional) -----
 
-# File listing plugins blosxom should load
-# (if empty blosxom will load all plugins in $plugin_dir and $plugin_path directories)
+# File listing plugins blosxom should load (if empty blosxom will load
+# all plugins in $plugin_dir and $plugin_path directories)
 $plugin_list = "";
 
 # Where are my plugins kept?
@@ -254,7 +254,8 @@ sub blosxom_html_escape {
 # Global variable to be used in head/foot.{flavour} templates
 $path_info = '';
 
-# Add all @path_info elements to $path_info till we come to one that could be a year
+# Add all @path_info elements to $path_info till we come to one that
+# could be a year
 while ( $path_info[0] && $path_info[0] !~ /^(19|20)\d{2}$/ ) {
     $path_info .= '/' . shift @path_info;
 }
