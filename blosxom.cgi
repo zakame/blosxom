@@ -76,7 +76,8 @@ $static_password = "";
 # 0 = no, 1 = yes
 $static_entries = 0;
 
-# Should I encode entities for xml content-types? (plugins can turn this off if they do it themselves)
+# Should I encode entities for xml content-types? (plugins can turn this
+# off if they do it themselves)
 $encode_xml_entities = 1;
 
 # --------------------------------
