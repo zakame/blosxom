@@ -96,7 +96,12 @@ our (
     @num2month,           $interpolate,       $entries,
     $output,              $header,            $show_future_entries,
     %files,               %indexes,           %others,
-    $encode_xml_entities, $content_type
+    $encode_xml_entities, $content_type,      $path,
+    $fn,                  $dw,                $mo,
+    $mo_num,              $da,                $ti,
+    $yr,                  $hr,                $min,
+    $hr12,                $ampm,              $utc_offset,
+    $title,               $body,              $raw
 );
 
 use strict;
@@ -650,7 +655,6 @@ sub generate {
 
         foreach my $path_file ( &$sort( \%f, \%others ) ) {
             last if $ne <= 0 && $date !~ /\d/;
-            use vars qw/ $path $fn /;
             ( $path, $fn )
                 = $path_file =~ m!^$datadir/(?:(.*)/)?(.*)\.$file_extension!;
 
@@ -663,8 +667,6 @@ sub generate {
             $path &&= "/$path";
 
             # Date fiddling for by-{year,month,day} archive views
-            use vars
-                qw/ $dw $mo $mo_num $da $ti $yr $hr $min $hr12 $ampm $utc_offset/;
             ( $dw, $mo, $mo_num, $da, $ti, $yr, $utc_offset )
                 = nice_date( $files{"$path_file"} );
             ( $hr, $min ) = split /:/, $ti;
@@ -701,7 +703,6 @@ sub generate {
                 $output .= $date;
             }
 
-            use vars qw/ $title $body $raw /;
             if ( -f "$path_file" && $fh->open("< $path_file") ) {
                 chomp( $title = <$fh> );
                 chomp( $body = join '', <$fh> );
