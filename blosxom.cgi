@@ -589,8 +589,8 @@ sub generate {
         my $template = shift;
 
         # Interpolate scalars, namespaced scalars, and hash/hashref scalars
-        $template
-            =~ s/(\$\w+(?:::\w+)*(?:(?:->)?{(['"]?)[-\w]+\2})?)/"defined $1 ? $1 : ''"/gee;
+        my $regex = qr/(\$\w+(?:::\w+)*(?:(?:->)?{(['"]?)[-\w]+\2})?)/o;
+        $template =~ s/$regex/"defined $1 ? $1 : ''"/gee;
         return $template;
     };
 
