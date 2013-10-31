@@ -786,10 +786,10 @@ sub nice_date {
 __DATA__
 html content_type text/html; charset=$blog_encoding
 
-html head <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-html head <html>
+html head <!DOCTYPE html>
+html head <html lang="$blog_language">
 html head     <head>
-html head         <meta http-equiv="content-type" content="$content_type" >
+html head         <meta charset="$blog_encoding">
 html head         <link rel="alternate" type="application/rss+xml" title="RSS" href="$url/index.rss" >
 html head         <title>$blog_title $path_info_da $path_info_mo $path_info_yr</title>
 html head     </head>
@@ -842,7 +842,7 @@ rss foot </rss>
 
 error content_type text/html
 
-error head <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+error head <!DOCTYPE html>
 error head <html>
 error head <head><title>Error: unknown Blosxom flavour "$flavour"</title></head>
 error head     <body>
