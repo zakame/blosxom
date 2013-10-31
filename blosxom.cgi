@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # Blosxom
 # Author: Rael Dornfest (2002-2003), The Blosxom Development Team (2005-2008)
