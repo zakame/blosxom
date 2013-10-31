@@ -81,8 +81,23 @@ $encode_xml_entities = 1;
 
 # --------------------------------
 
-use vars
-    qw! $version $blog_title $blog_description $blog_language $blog_encoding $datadir $url %template $template $depth $num_entries $file_extension $default_flavour $static_or_dynamic $config_dir $plugin_list $plugin_path $plugin_dir $plugin_state_dir @plugins %plugins $static_dir $static_password @static_flavours $static_entries $path_info_full $path_info $path_info_yr $path_info_mo $path_info_da $path_info_mo_num $flavour $static_or_dynamic %month2num @num2month $interpolate $entries $output $header $show_future_entries %files %indexes %others $encode_xml_entities $content_type !;
+our (
+    $version,             $blog_title,        $blog_description,
+    $blog_language,       $blog_encoding,     $datadir,
+    $url,                 %template,          $template,
+    $depth,               $num_entries,       $file_extension,
+    $default_flavour,     $static_or_dynamic, $config_dir,
+    $plugin_list,         $plugin_path,       $plugin_dir,
+    $plugin_state_dir,    @plugins,           %plugins,
+    $static_dir,          $static_password,   @static_flavours,
+    $static_entries,      $path_info_full,    $path_info,
+    $path_info_yr,        $path_info_mo,      $path_info_da,
+    $path_info_mo_num,    $flavour,           %month2num,
+    @num2month,           $interpolate,       $entries,
+    $output,              $header,            $show_future_entries,
+    %files,               %indexes,           %others,
+    $encode_xml_entities, $content_type
+);
 
 use strict;
 use FileHandle;
